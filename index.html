@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aria Sol | Creative Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #07111f;
+        --bg-soft: #0d1b30;
+        --panel: rgba(7, 17, 31, 0.68);
+        --panel-strong: rgba(10, 23, 41, 0.9);
+        --line: rgba(183, 225, 255, 0.16);
+        --text: #eff7ff;
+        --muted: #9db4c8;
+        --cyan: #76e4f7;
+        --lime: #d1ff75;
+        --coral: #ff8f6b;
+        --gold: #ffd36e;
+        --rose: #ffb2c8;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(118, 228, 247, 0.15), transparent 30%),
+          radial-gradient(circle at 80% 15%, rgba(255, 211, 110, 0.16), transparent 26%),
+          radial-gradient(circle at 50% 100%, rgba(209, 255, 117, 0.14), transparent 24%),
+          linear-gradient(135deg, #040914 0%, #091526 45%, #07111f 100%);
+        font-family: "Bricolage Grotesque", sans-serif;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.18;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .app-shell {
+        position: relative;
+        width: min(1220px, calc(100% - 32px));
+        margin: 24px auto;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        background: linear-gradient(180deg, rgba(11, 24, 43, 0.72), rgba(5, 13, 24, 0.88));
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        backdrop-filter: blur(18px);
+      }
+
+      .app-shell .noise {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.08;
+        background-image:
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0 0.8px, transparent 1px),
+          radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.7) 0 0.8px, transparent 1px),
+          radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.7) 0 0.8px, transparent 1px);
+        background-size: 28px 28px, 36px 36px, 44px 44px;
+        mix-blend-mode: soft-light;
+      }
+
+      .app-shell::before,
+      .app-shell::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(10px);
+        opacity: 0.8;
+      }
+
+      .app-shell::before {
+        top: -80px;
+        right: -30px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(118, 228, 247, 0.42), transparent 70%);
+        animation: orbit 15s linear infinite;
+      }
+
+      .app-shell::after {
+        bottom: -70px;
+        left: -30px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(255, 143, 107, 0.24), transparent 70%);
+        animation: orbitReverse 18s linear infinite;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding-bottom: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-mark {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 18px 24px 16px 22px;
+        background:
+          linear-gradient(135deg, var(--cyan), var(--lime)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent);
+        color: #06101d;
+        font-weight: 800;
+        transform: rotate(-8deg);
+        box-shadow: 0 14px 40px rgba(118, 228, 247, 0.25);
+      }
+
+      .brand-copy strong,
+      .hero-copy h1,
+      .page-card h2,
+      .spotlight-card h3,
+      .section-heading,
+      .panel h3 {
+        font-family: "Syne", sans-serif;
+      }
+
+      .brand-copy strong {
+        display: block;
+        font-size: 1rem;
+      }
+
+      .brand-copy span,
+      .eyebrow,
+      .meta,
+      .footer-note {
+        color: var(--muted);
+      }
+
+      .nav-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .nav-pill {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        border-radius: 999px 999px 999px 18px;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+      }
+
+      .nav-pill:hover,
+      .nav-pill.active {
+        transform: translateY(-2px);
+        background: rgba(118, 228, 247, 0.12);
+        border-color: rgba(118, 228, 247, 0.35);
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 22px;
+        align-items: stretch;
+        margin-top: 18px;
+      }
+
+      .hero-copy,
+      .hero-stack,
+      .page-card,
+      .panel,
+      .spotlight-card {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        backdrop-filter: blur(16px);
+      }
+
+      .hero-copy {
+        padding: 34px;
+        border-radius: 28px 34px 26px 38px;
+        position: relative;
+      }
+
+      .hero-copy::after {
+        content: "favourite tools: late-night playlists, sharp typography, and clean code";
+        position: absolute;
+        right: 24px;
+        bottom: 18px;
+        max-width: 240px;
+        font-size: 0.72rem;
+        line-height: 1.5;
+        color: rgba(239, 247, 255, 0.58);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.74rem;
+      }
+
+      .hero-copy h1 {
+        margin: 20px 0 16px;
+        font-size: clamp(3rem, 8vw, 6.2rem);
+        line-height: 0.92;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        max-width: 640px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.06rem;
+        line-height: 1.7;
+      }
+
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .cta-primary,
+      .cta-secondary {
+        border-radius: 999px;
+        padding: 13px 20px;
+        text-decoration: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      }
+
+      .cta-primary {
+        background: linear-gradient(135deg, var(--cyan), var(--lime));
+        color: #06101d;
+        font-weight: 700;
+        box-shadow: 0 14px 34px rgba(118, 228, 247, 0.22);
+      }
+
+      .cta-secondary {
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .cta-primary:hover,
+      .cta-secondary:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-stack {
+        display: grid;
+        gap: 16px;
+        padding: 18px;
+        border-radius: 34px 22px 34px 22px;
+      }
+
+      .spotlight-card {
+        position: relative;
+        padding: 22px;
+        border-radius: 26px 20px 30px 18px;
+        overflow: hidden;
+      }
+
+      .spotlight-card::before {
+        content: "";
+        position: absolute;
+        inset: auto -30px -30px auto;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 70%);
+      }
+
+      .spotlight-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.5rem;
+      }
+
+      .spotlight-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .metric {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+      }
+
+      .marquee-group {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        gap: 18px;
+        margin: 34px 0 18px;
+      }
+
+      .marquee {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(118, 228, 247, 0.08));
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+        transform-origin: center;
+      }
+
+      .marquee.is-tilted-a {
+        transform: rotate(-2.2deg) translateX(-10px);
+      }
+
+      .marquee.is-tilted-b {
+        transform: rotate(1.7deg) translateX(14px);
+      }
+
+      .marquee-track {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        min-width: max-content;
+        padding: 14px 0;
+        animation: marquee 20s linear infinite;
+      }
+
+      .marquee.reverse .marquee-track {
+        animation-direction: reverse;
+      }
+
+      .marquee-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 0.86rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #d9f2ff;
+        white-space: nowrap;
+      }
+
+      .marquee-item::after {
+        content: "//";
+        color: var(--rose);
+      }
+
+      .page-stage {
+        position: relative;
+        z-index: 2;
+        margin-top: 22px;
+      }
+
+      .page-card {
+        padding: 28px;
+        border-radius: 34px 26px 36px 22px;
+        animation: pageReveal 0.65s ease;
+        position: relative;
+      }
+
+      .page-card::before {
+        content: "";
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        width: 88px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyan), var(--lime));
+        opacity: 0.65;
+      }
+
+      .page-card h2 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+      }
+
+      .page-card p.lead {
+        max-width: 760px;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 1rem;
+        margin: 14px 0 0;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 26px;
+      }
+
+      .panel {
+        border-radius: 22px 28px 20px 30px;
+        padding: 22px;
+      }
+
+      .panel h3 {
+        margin-top: 0;
+        font-size: 1.3rem;
+      }
+
+      .panel p,
+      .panel li {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .panel ul {
+        padding-left: 18px;
+        margin: 0;
+      }
+
+      .span-7 {
+        grid-column: span 7;
+      }
+
+      .span-5 {
+        grid-column: span 5;
+      }
+
+      .span-4 {
+        grid-column: span 4;
+      }
+
+      .span-8 {
+        grid-column: span 8;
+      }
+
+      .stack-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .list-card {
+        display: flex;
+        gap: 14px;
+        padding: 14px;
+        border-radius: 18px 24px 16px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .list-card strong {
+        min-width: 86px;
+        color: var(--gold);
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .badge {
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px 999px 999px 14px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .signature-note {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border-left: 2px solid rgba(255, 178, 200, 0.6);
+        background: rgba(255, 255, 255, 0.03);
+        color: #dbe9f7;
+        font-size: 0.96rem;
+        line-height: 1.7;
+      }
+
+      .mini-profile {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .profile-orb {
+        width: 92px;
+        height: 92px;
+        border-radius: 28px 50% 40% 44px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 35%),
+          linear-gradient(135deg, rgba(255, 143, 107, 0.9), rgba(118, 228, 247, 0.85));
+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
+      }
+
+      .mini-profile strong {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+
+      .mini-profile span {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .quirk-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .quirk {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #dcecff;
+      }
+
+      .quirk::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 3px 50% 50% 3px;
+        background: linear-gradient(135deg, var(--rose), var(--gold));
+        flex: 0 0 auto;
+      }
+
+      .section-heading {
+        font-size: 1.35rem;
+        margin: 0 0 16px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 16px;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .timeline-item strong {
+        color: var(--cyan);
+      }
+
+      .mail-link {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .footer-row {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 26px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .footer-row .footer-note:last-child {
+        max-width: 420px;
+        text-align: right;
+      }
+
+      .float {
+        animation: float 5s ease-in-out infinite;
+      }
+
+      .delay-a {
+        animation-delay: 0.2s;
+      }
+
+      .delay-b {
+        animation-delay: 0.4s;
+      }
+
+      .delay-c {
+        animation-delay: 0.6s;
+      }
+
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      @keyframes orbit {
+        from {
+          transform: rotate(0deg) translateX(8px) rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg) translateX(8px) rotate(-360deg);
+        }
+      }
+
+      @keyframes orbitReverse {
+        from {
+          transform: rotate(360deg) translateX(20px) rotate(-360deg);
+        }
+        to {
+          transform: rotate(0deg) translateX(20px) rotate(0deg);
+        }
+      }
+
+      @keyframes pageReveal {
+        from {
+          opacity: 0;
+          transform: translateY(22px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .span-4,
+        .span-5,
+        .span-7,
+        .span-8 {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .app-shell {
+          width: min(100% - 18px, 100%);
+          margin: 10px auto;
+          padding: 18px;
+          border-radius: 24px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-actions {
+          justify-content: flex-start;
+        }
+
+        .hero-copy,
+        .page-card {
+          padding: 22px;
+        }
+
+        .hero-copy::after {
+          position: static;
+          display: block;
+          margin-top: 18px;
+          max-width: none;
+        }
+
+        .metric-row,
+        .timeline-item,
+        .mini-profile {
+          grid-template-columns: 1fr;
+        }
+
+        .marquee.is-tilted-a,
+        .marquee.is-tilted-b {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      const pages = [
+        {
+          id: "home",
+          label: "Home",
+          title: "Creative developer crafting immersive digital experiences.",
+          lead:
+            "Aria Sol is a Mumbai-based creative developer blending interaction design, front-end engineering, and brand storytelling for studios, founders, and cultural projects.",
+          marquee: ["Aria Sol", "Creative Developer", "Interaction Design", "Frontend Systems", "Brand Storytelling"],
+        },
+        {
+          id: "work",
+          label: "Work",
+          title: "Selected work across culture, fashion, and technology.",
+          lead:
+            "Recent projects span launch campaigns, editorial portfolios, and product experiences designed to feel polished, memorable, and easy to use.",
+          marquee: ["Selected Work", "Launch Campaigns", "Editorial Portfolios", "Motion-led Interfaces", "Creative Partnerships"],
+        },
+        {
+          id: "lab",
+          label: "About",
+          title: "A process grounded in clarity, rhythm, and strong visual identity.",
+          lead:
+            "Aria works from concept through launch, shaping each project with a clear narrative, responsive systems, and motion that supports the content instead of distracting from it.",
+          marquee: ["About Aria", "Creative Direction", "Design Systems", "Responsive Craft", "Thoughtful Motion"],
+        },
+        {
+          id: "contact",
+          label: "Contact",
+          title: "Available for selected freelance and collaborative projects.",
+          lead:
+            "Aria partners with founders, agencies, and independent brands looking for a distinct digital presence with strong execution from strategy to final build.",
+          marquee: ["Get In Touch", "Freelance Projects", "Studio Collaborations", "Remote Worldwide", "Now Booking"],
+        },
+      ];
+
+      function MarqueeLine({ items, reverse = false, tilt = "" }) {
+        const doubled = [...items, ...items];
+        return (
+          <div className={"marquee" + (reverse ? " reverse" : "") + (tilt ? " " + tilt : "")}>
+            <div className="marquee-track">
+              {doubled.map((item, index) => (
+                <div className="marquee-item" key={item + index}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      function HomePage() {
+        return (
+          <div className="content-grid">
+            <div className="panel span-7 float">
+              <h3>Profile</h3>
+              <div className="mini-profile">
+                <div className="profile-orb"></div>
+                <div>
+                  <strong>Aria Sol</strong>
+                  <span>
+                    Creative developer, visual thinker, and detail collector. Usually found shaping
+                    interface rhythm with a notebook nearby and too many tabs open.
+                  </span>
+                </div>
+              </div>
+              <p>
+                Aria Sol is a multidisciplinary creative developer with over five years of
+                experience designing and building websites that combine strong visual direction with
+                production-ready front-end craft. Her work focuses on launches, portfolios, and
+                editorial brand experiences that need more personality than a standard template can offer.
+              </p>
+              <div className="badge-row">
+                <div className="badge">Creative Developer</div>
+                <div className="badge">Mumbai, India</div>
+                <div className="badge">5+ years experience</div>
+                <div className="badge">Remote worldwide</div>
+              </div>
+              <div className="signature-note">
+                She likes portfolios that feel a little cinematic, a little human, and never too
+                polished to have a pulse.
+              </div>
+            </div>
+            <div className="panel span-5 float delay-a">
+              <h3>Highlights</h3>
+              <div className="metric-row">
+                <div className="metric">
+                  <strong>28</strong>
+                  <span className="meta">Projects launched</span>
+                </div>
+                <div className="metric">
+                  <strong>11</strong>
+                  <span className="meta">Long-term clients</span>
+                </div>
+                <div className="metric">
+                  <strong>96%</strong>
+                  <span className="meta">Client satisfaction</span>
+                </div>
+              </div>
+            </div>
+            <div className="panel span-4 float delay-b">
+              <h3>Specialties</h3>
+              <p>
+                Brand-led websites, interaction design, motion systems, art direction, and
+                front-end development for high-impact digital launches.
+              </p>
+              <div className="quirk-list">
+                <div className="quirk">Editorial compositions with unusual spacing</div>
+                <div className="quirk">Motion that guides attention instead of shouting</div>
+                <div className="quirk">Tiny details people notice on the second look</div>
+              </div>
+            </div>
+            <div className="panel span-8 float delay-c">
+              <h3>Services</h3>
+              <div className="stack-list">
+                <div className="list-card">
+                  <strong>Creative Direction</strong>
+                  <span>Visual territories, content hierarchy, and interface concepts shaped around brand tone.</span>
+                </div>
+                <div className="list-card">
+                  <strong>Design & Build</strong>
+                  <span>Responsive front-end experiences developed with careful motion, pacing, and accessibility.</span>
+                </div>
+                <div className="list-card">
+                  <strong>Launch Support</strong>
+                  <span>Final polish, QA, and implementation support for campaigns, portfolios, and product launches.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function WorkPage() {
+        return (
+          <div className="content-grid">
+            <div className="panel span-8">
+              <h3 className="section-heading">Selected projects</h3>
+              <div className="stack-list">
+                <div className="list-card">
+                  <strong>Nova Grid Festival</strong>
+                  <span>Synth music festival platform featuring animated lineup reveals, ticket drops, and a responsive schedule system.</span>
+                </div>
+                <div className="list-card">
+                  <strong>Pulse Edit</strong>
+                  <span>Editorial portfolio for a fashion image-maker with cinematic type, smooth transitions, and modular story pages.</span>
+                </div>
+                <div className="list-card">
+                  <strong>Drift Labs</strong>
+                  <span>Launch site for an AI audio startup built around motion-led product storytelling and immersive visual pacing.</span>
+                </div>
+              </div>
+            </div>
+            <div className="panel span-4">
+              <h3>What I do</h3>
+              <ul>
+                <li>Brand and campaign websites</li>
+                <li>Interactive portfolios and editorial experiences</li>
+                <li>Front-end systems with motion and responsive polish</li>
+              </ul>
+            </div>
+            <div className="panel span-5">
+              <h3>Approach</h3>
+              <p>
+                Each project begins with narrative structure and visual tone, then moves into a
+                practical system of components, motion rules, and responsive behavior.
+              </p>
+            </div>
+            <div className="panel span-7">
+              <h3>Project timeline</h3>
+              <div className="timeline">
+                <div className="timeline-item">
+                  <strong>Discovery</strong>
+                  <div>Research, moodboards, content structure, and visual direction.</div>
+                </div>
+                <div className="timeline-item">
+                  <strong>Design</strong>
+                  <div>Interface systems, motion studies, and responsive page design.</div>
+                </div>
+                <div className="timeline-item">
+                  <strong>Build</strong>
+                  <div>Front-end development, refinement, QA, and launch preparation.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function LabPage() {
+        return (
+          <div className="content-grid">
+            <div className="panel span-5">
+              <h3>Background</h3>
+              <p>
+                Aria started in visual design before moving deeper into front-end development,
+                creating a practice that bridges concept, interface, and implementation without
+                losing the original creative intent.
+              </p>
+              <div className="badge-row">
+                <div className="badge">Figma</div>
+                <div className="badge">React</div>
+                <div className="badge">Framer Motion</div>
+                <div className="badge">CSS Systems</div>
+                <div className="badge">Creative Direction</div>
+              </div>
+            </div>
+            <div className="panel span-7">
+              <h3>Philosophy</h3>
+              <p>
+                The best digital work feels immediate and intentional. Motion should guide
+                attention, typography should carry tone, and every interaction should support the
+                story the brand is trying to tell.
+              </p>
+              <div className="signature-note">
+                Good design is rarely about adding more. It is usually about choosing the one
+                unexpected detail that makes everything else feel more alive.
+              </div>
+            </div>
+            <div className="panel span-12">
+              <h3 className="section-heading">Experience</h3>
+              <div className="stack-list">
+                <div className="list-card">
+                  <strong>2024 - Present</strong>
+                  <span>Independent creative developer working with fashion labels, founders, and design studios.</span>
+                </div>
+                <div className="list-card">
+                  <strong>2022 - 2024</strong>
+                  <span>Senior front-end designer at Luma Studio, leading interactive campaign and portfolio builds.</span>
+                </div>
+                <div className="list-card">
+                  <strong>2020 - 2022</strong>
+                  <span>Visual designer and developer for independent clients across music, hospitality, and culture.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function ContactPage() {
+        return (
+          <div className="content-grid">
+            <div className="panel span-7">
+              <h3>Let's work together</h3>
+              <p>
+                Available for selected freelance projects, studio collaborations, and launch work
+                beginning in April 2026. Typical engagements include campaign sites, portfolio
+                redesigns, and high-touch product marketing pages.
+              </p>
+              <a className="mail-link" href="mailto:aria@ariasol.studio">
+                aria@ariasol.studio
+              </a>
+              <div className="signature-note">
+                Best fits are teams with a point of view, a strong story, and enough ambition to
+                avoid the obvious route.
+              </div>
+            </div>
+            <div className="panel span-5">
+              <h3>Based in</h3>
+              <p>
+                Mumbai, India
+                <br />
+                Working with clients remotely worldwide
+              </p>
+            </div>
+            <div className="panel span-12">
+              <h3>Services</h3>
+              <ul>
+                <li>Creative direction and interface design</li>
+                <li>Front-end development for launch and portfolio sites</li>
+                <li>Motion systems, responsive refinement, and launch support</li>
+              </ul>
+            </div>
+          </div>
+        );
+      }
+
+      function App() {
+        const [activePage, setActivePage] = React.useState("home");
+        const currentPage = pages.find((page) => page.id === activePage);
+
+        return (
+          <main className="app-shell">
+            <div className="noise"></div>
+            <header className="topbar">
+              <div className="brand">
+                <div className="brand-mark">RX</div>
+                <div className="brand-copy">
+                  <strong>Aria Sol</strong>
+                  <span>Creative Developer</span>
+                </div>
+              </div>
+              <nav className="nav-actions" aria-label="Primary">
+                {pages.map((page) => (
+                  <button
+                    key={page.id}
+                    className={"nav-pill" + (page.id === activePage ? " active" : "")}
+                    onClick={() => setActivePage(page.id)}
+                  >
+                    {page.label}
+                  </button>
+                ))}
+              </nav>
+            </header>
+
+            <section className="hero-grid">
+              <div className="hero-copy">
+                <div className="eyebrow">Mumbai based | available worldwide</div>
+                <h1>Designing digital experiences with motion, clarity, and character.</h1>
+                <p>
+                  Aria Sol partners with founders, agencies, and cultural brands to create websites
+                  that feel editorial, interactive, and deeply considered from first impression to
+                  final interaction.
+                </p>
+                <div className="hero-cta">
+                  <a className="cta-primary" href="#page-stage">
+                    View work
+                  </a>
+                  <button className="cta-secondary" onClick={() => setActivePage("contact")}>
+                    Get in touch
+                  </button>
+                </div>
+              </div>
+
+              <div className="hero-stack">
+                <div className="spotlight-card float">
+                  <div className="eyebrow">Currently</div>
+                  <h3>Booking selected projects for Spring 2026</h3>
+                  <p>
+                    Open to portfolio redesigns, launch campaigns, and collaborative studio work
+                    with teams who value strong visual identity and clean execution.
+                  </p>
+                </div>
+                <div className="spotlight-card float delay-a">
+                  <div className="eyebrow">Off the clock</div>
+                  <h3>Collecting film posters, saving type specimens, and chasing strange layouts</h3>
+                  <p>
+                    That mix of references shows up in the work: expressive composition, tactile
+                    pacing, and interfaces that feel made by a person.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="marquee-group" aria-label="Animated title lines">
+              <MarqueeLine items={currentPage.marquee} tilt="is-tilted-a" />
+              <MarqueeLine
+                items={["Aria Sol", "Creative Developer", "Mumbai", "Remote Worldwide", "Available for Projects"]}
+                reverse
+                tilt="is-tilted-b"
+              />
+            </section>
+
+            <section className="page-stage" id="page-stage">
+              <article className="page-card" key={currentPage.id}>
+                <div className="eyebrow">{currentPage.label} view</div>
+                <h2>{currentPage.title}</h2>
+                <p className="lead">{currentPage.lead}</p>
+                {activePage === "home" && <HomePage />}
+                {activePage === "work" && <WorkPage />}
+                {activePage === "lab" && <LabPage />}
+                {activePage === "contact" && <ContactPage />}
+              </article>
+            </section>
+
+            <footer className="footer-row">
+              <div className="footer-note">Aria Sol</div>
+              <div className="footer-note">Creative Developer based in Mumbai, working worldwide and building digital work with a little edge.</div>
+            </footer>
+          </main>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
